@@ -1,0 +1,489 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>한빛미디어</title>
+<link type="text/css" href="css/style.css" rel="stylesheet"/>
+<link rel="stylesheet" href="css/coin-slider-styles.css"/>
+<script src="js/jquery-1.12.4.min.js"></script>
+<script src="js/jquery.xdomainajax.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/dist/js/swipe.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/dist/js/jquery.bxslider.min.js"></script>
+<script src="js/coin-slider.min.js"></script>
+<script type="text/javascript">
+	$(function(){  
+		$("#coin-slider").coinslider();
+		
+		$(".navi_set").hover(function() {
+			$(this).find(".subnav").finish().slideDown('normal').show();
+			}, function(){  
+				$(this).find(".subnav").finish().slideUp('fast'); 
+		});
+		
+		$("#wrap_icon a").children().hover(function() {
+			var hoverIcon = $(this).attr("src").substring(6, 20);
+			$(this).attr("src", "image/"+hoverIcon+"_hover.png");
+		}, function() {
+			var blurIcon = $(this).attr("src").replace("_hover", "");
+			$(this).attr("src", blurIcon);
+		});
+		
+		$("#best_books a").children().hover(function() {
+			var hoverIcon = $(this).attr("src").substring(6, 20);
+			$(this).attr("src", "image/"+hoverIcon+"_hover.png");
+		}, function() {
+			var blurIcon = $(this).attr("src").replace("_hover", "");
+			$(this).attr("src", blurIcon);
+		});
+		
+		$(".subnav li").click(function() {
+			location.href="#";
+		});
+		
+		var onTab=$("#tabmenu dt a:first");
+		
+		$("#tabmenu dt a").on("mouseover focus click",function(){
+			$("#tabmenu dd:visible").hide();
+			
+			$("img",onTab).attr("src",$("img",onTab).attr("src").replace("over.gif",
+			"out.gif"));
+			
+			$(this).parent().next().show();
+			
+			$("img",this).attr("src",$("img",this).attr("src").replace("out.gif","over.gif"));
+			
+			onTab=$(this);
+			return false;
+		});
+		
+		$("#online_study_content img").each(function(i, element) {
+			$(this).click(function(){
+				if(i<6 && i>2){
+					$(this).finish().animate({"width":"0","height":"0"}, 1000);
+					$(this).hide();
+					$("#close").hide();
+				}else{
+					var studyArr =[null,null,null,null,null,null,
+						".ex_bigdata",".ex_sw",".ex_security"];
+					$(studyArr[i]).show();
+					var imgObj = $(studyArr[i]);
+					imgObj.finish().animate({"width":"800px","height":"700px"}, 1000);
+					imgObj.queue(function(){
+						imgObj.css({"border":"2px solid black",
+								"border-radius":"20px",
+								"box-shadow":"5px 5px 5px black"});
+						$(this).dequeue();
+					});
+					imgObj.fadeOut("fast").fadeIn("fast");
+					$("#close").finish().fadeIn("fast").show();
+				}
+			});
+		});
+		
+		var key=0;
+		setInterval(function() {
+			if(key==0){
+				$("#icon_click").attr("src","image/icon_click2.png");
+				key++;
+			}else{
+				$("#icon_click").attr("src","image/icon_click.png");
+				key=0;
+			}	
+		}, 500);
+		
+		var mySwipe = $('#mySwipe').Swipe({
+			auto: 3000,
+			continuous: true,
+			callback: function(index, element){
+				$(".touch_bullet .active")
+				.attr("src",$(".touch_bullet .active")
+				.attr("src").replace("on.png","off.png"))
+				.removeClass("active");
+				
+				$(".touch_bullet img").eq(index)
+				.attr("src",$(".touch_bullet img").eq(index)
+				.attr("src").replace("off.png","on.png"))
+				.addClass("active");
+			}
+		}).data('Swipe');
+		
+		
+		$(".touch_left_btn a").on("click",function(){
+			mySwipe.prev();
+			return false;
+		});
+		
+		$(".touch_right_btn a").on("click",function(){
+			mySwipe.next();
+			return false;
+		});
+		
+		var mySlider=$("#best_bg ul").bxSlider({
+			mode:"horizontal",
+			speed:500,
+			pager:false,
+			moveSlides:1,
+			slideWidth:125,
+			minSlides:5,
+			maxSlides:5,
+			slideMargin:30,
+			auto:true,
+			autoHover:true,
+			controls:false
+		});
+		
+		$(".prev_btn").on("click",function(){
+			mySlider.goToPrevSlide();
+			return false;
+		});
+		
+		$(".next_btn").on("click",function(){
+			mySlider.goToNextSlide();
+			return false;
+		});
+		
+		$.ajax({
+			url:"https://news.google.com/news?cf=all&hl=ko&pz=1&ned=kr&topic=t&output=rss",
+			type:"get",
+			dataType:"xml",
+			success:function(data){
+				var xml = $.parseXML(data.responseText);
+				console.log(xml);
+				
+				$(xml).find("item").each(function(){
+					var title = $(this).find("title").text();
+					var description = $(this).find("description").text().replace(/(<([^>]+)>)/ig, "");
+					var pubDate = $(this).find("pubDate").text();
+					var link = $(this).find("link").text();
+					
+					var li = $("<li>");
+					var br = $("<br>");
+					var aTag = $("<a>").attr("href",link).html(title);
+					var span1 = $("<span id='span1'>").html(pubDate);
+					var span2 = $("<span id='span2'>").html(description);
+					
+					var item = li.append(aTag).append(span1).append(br).append(span2);
+					
+					$("#list").append(item);
+				});
+			}
+		});
+		
+		$(document).on("mouseover focus", "#list li", function(){
+			$(this).children("#span2").show();
+		});
+		
+		$(document).on("mouseout blur", "#list li", function(){
+			$(this).children("#span2").hide();
+		});
+		
+		var headerOffsetTop = $("#top_content").offset().top;
+		$(window).on("scroll", function(){
+			if($(window).scrollTop() > headerOffsetTop){
+				$("#header").addClass("sticky-header");
+				$("#header").css("background","white");
+				$("#logo").animate({"height":"57px","padding":"0"}, 1000);
+				$("#top_hanbit").attr("src","image/hanbit2.png");
+				$("#top_hanbit").animate({"margin-right":"1050px","margin-bottom":"20px"},1000);
+				$("#top_book_img").hide();
+			}else{
+				$("#header").removeClass("sticky-header");
+				$("#header").css("background","#000");
+				$("#top_hanbit").attr("src","image/hanbit.png");
+				$("#logo").finish().css("height","auto").finish();
+				$("#logo").finish().css("padding","35px 0").finish();
+				$("#top_hanbit").finish().css("margin-right","0").finish();
+				$("#top_hanbit").finish().css("margin-bottom","0").finish();
+				$("#top_book_img").show();
+			}
+		});
+	});
+</script>
+</head>
+<body>
+<div id="wrap">
+	<div id="header">
+		<div id="logo">
+		<img src="image/top_book_img.png" id="top_book_img"/>
+		<img src="image/hanbit.png" id="top_hanbit"></div>
+			<div class="navi_bg">
+				<div class="nav">  
+					<li class="navi_set">  
+						<div class="topnav">Book</div>
+						<ul class="subnav">  
+							<li>IT</li>  
+							<li>건강</li> 
+							<li>소설</li>  
+							<li>과학</li>  
+						</ul>  
+					</li>  
+					<li class="navi_set">  
+						<div class="topnav">온라인 강의</div>
+						<ul class="subnav">  
+							<li>자바 개발자 과정</li>  
+							<li>빅데이터 개발자 과정</li> 
+							<li>보안엔지니어링 과정</li>   
+						</ul>  
+					</li> 
+					<li class="navi_set">  
+						<div class="topnav">구글 뉴스</div>
+						<ul class="subnav">  
+							<li>과학기술</li>  
+							<li>경제</li> 
+							<li>정치</li>   
+						</ul>  
+					</li>
+					<li class="navi_set">  
+						<div class="topnav">커뮤니티</div>
+						<ul class="subnav">  
+							<li>공지사항</li>  
+							<li>Q&A</li> 
+							<li>자유게시판</li>   
+						</ul>  
+					</li>
+					<li class="navi_set">  
+						<div class="topnav">이벤트</div>
+						<ul class="subnav">
+							<li>event1</li>  
+							<li>event2</li> 
+							<li>event3</li>  
+							<li>event4</li>
+						</ul>  
+					</li> 
+					<li class="navi_set">  
+						<div class="topnav">한빛미디어</div>
+						<ul class="subnav">  
+							<li>한빛미디어1</li>  
+							<li>한빛미디어2</li> 
+							<li>한빛미디어3</li>  
+							<li>한빛미디어4</li>  
+						</ul>  
+					</li>
+					<li class="navi_set">  
+						<div class="topnav">한빛라이프</div>
+						<ul class="subnav">  
+							<li>한빛라이프1</li>  
+							<li>한빛라이프2</li> 
+							<li>한빛라이프3</li>  
+							<li>한빛라이프4</li>  
+						</ul>  
+					</li>
+				</div>
+			</div>
+	</div>
+	<div id="headline">
+		<img src="image/headline.png" class="headline"/>
+		<div id="wrap_icon">
+			<a href="#"><img src="image/headline_icon1.png" class="icon1"/></a>
+			<a href="#"><img src="image/headline_icon2.png" class="icon2"/></a>
+			<a href="#"><img src="image/headline_icon3.png" class="icon3"/></a>
+			<a href="#"><img src="image/headline_icon4.png" class="icon4"/></a>
+			<a href="#"><img src="image/headline_icon5.png" class="icon5"/></a>
+			<a href="#"><img src="image/headline_icon6.png" class="icon6"/></a>
+			<a href="#"><img src="image/headline_icon7.png" class="icon7"/></a>
+			<a href="#"><img src="image/headline_icon8.png" class="icon8"/></a>
+		</div>
+	</div>
+	<div id="top_content">
+		<div id="coin-slider">
+			<a href="#">
+				<img src="image/menu_slide1.png"/>
+			</a>
+			<a href="#">
+				<img src="image/menu_slide2.png"/>
+			</a>
+		</div>
+		<dl id="tabmenu">
+			<dt class="tab_btn1">
+				<a href="#"><img src="image/tab_btn_1_over.gif" alt="공지사항"/></a>
+			</dt>
+			<dd>
+				<ul>
+					<li>
+						<a href="#" class="board">공지사항 관련 내용입니다.</a><span>2014-03-01</span>
+					</li>
+					<li>
+						<a href="#" class="board">공지사항 관련 내용입니다.</a><span>2014-03-01</span>
+					</li>
+					<li>
+						<a href="#" class="board">공지사항 관련 내용입니다.</a><span>2014-03-01</span>
+					</li>
+					<li>
+						<a href="#" class="board">공지사항 관련 내용입니다.</a><span>2014-03-01</span>
+					</li>
+					<li>
+						<a href="#" class="board">공지사항 관련 내용입니다.</a><span>2014-03-01</span>
+					</li>
+				</ul>
+				<p>
+					<a href="#"><img src="image/tab_more_btn.gif" alt="더보기"/></a>
+				</p>
+			</dd>
+			<dt class="tab_btn2">
+				<a href="#"><img src="image/tab_btn_2_out.gif" alt="질문과 답변"/></a>
+			</dt>
+			<dd>
+				<ul>
+					<li>
+						<a href="#" class="board">질문과 답변 관련 내용입니다.</a>
+						<span>2014-03-01</span>
+					</li>
+					<li>
+						<a href="#" class="board">질문과 답변 관련 내용입니다.</a>
+						<span>2014-03-01</span>
+					</li>
+					<li>
+						<a href="#" class="board">질문과 답변 관련 내용입니다.</a>
+						<span>2014-03-01</span>
+					</li>
+					<li>
+						<a href="#" class="board">질문과 답변 관련 내용입니다.</a>
+						<span>2014-03-01</span>
+					</li>
+					<li>
+						<a href="#" class="board">질문과 답변 관련 내용입니다.</a>
+						<span>2014-03-01</span>
+					</li>
+				</ul>
+				<p>
+					<a href="#"><img src="image/tab_more_btn.gif" alt="더보기"/></a>
+				</p>
+			</dd>
+			<dt class="tab_btn3">
+				<a href="#"><img src="image/tab_btn_3_out.gif" alt="저자문의"/></a>
+			</dt>
+			<dd>
+				<ul>
+					<li>
+						<a href="#" class="board">저자문의 관련 내용입니다.</a>
+						<span>2014-03-01</span>
+					</li>
+					<li>
+						<a href="#" class="board">저자문의 관련 내용입니다.</a>
+						<span>2014-03-01</span>
+					</li>
+					<li>
+						<a href="#" class="board">저자문의 관련 내용입니다.</a>
+						<span>2014-03-01</span>
+					</li>
+					<li>
+						<a href="#" class="board">저자문의 관련 내용입니다.</a>
+						<span>2014-03-01</span>
+					</li>
+					<li>
+						<a href="#" class="board">저자문의 관련 내용입니다.</a>
+						<span>2014-03-01</span>
+					</li>
+				</ul>
+				<p>
+					<a href="#"><img src="image/tab_more_btn.gif" alt="더보기"/></a>
+				</p>
+				<p>
+					<a href="#"><img src="image/tab_more_btn.gif" alt="더"/></a>
+				</p>
+			</dd>
+		</dl>
+		<img src="image/call.png" id="call"/>
+		<img src="image/top_subimg.png" id="top_subimg"/>
+	</div>
+	<div id="online_study_content">
+		<img src="image/online_study.png" id="online_study"/>
+		<img src="image/icon_click.png" id="icon_click"/>
+		<img src="image/click.png" id="click"/>
+		<p id="close">창을 닫으려면 이미지를 클릭하세요.</p>
+		
+		<img src="image/ex_bigdata.png" class="ex_bigdata"/>
+		<img src="image/ex_sw.png" class="ex_sw"/>
+		<img src="image/ex_security.png" class="ex_security"/>
+		
+		<img src="image/bigdata.png" class="bigdata"/>
+		<img src="image/sw.png" class="sw"/>
+		<img src="image/security.png" class="security"/>
+	</div>
+	<p id="new_books_p">신간 책 정보</p>
+	<div id="wrap_new_books">
+		<div id="visual">
+			<div id="mySwipe" class="swipe">
+				<ul class="touch_banner swipe-wrap">
+					<li><a href="#"><img src="image/visual_img_1.png" alt=""/></a></li>
+					<li><a href="#"><img src="image/visual_img_2.png" alt=""/></a></li>
+					<li><a href="#"><img src="image/visual_img_3.png" alt=""/></a></li>
+					<li><a href="#"><img src="image/visual_img_4.png" alt=""/></a></li>
+				</ul>
+			</div>
+			<ul class="touch_bullet">
+				<li><img src="image/visual_bullet_on.png" class="active" alt=""/></li>
+				<li><img src="image/visual_bullet_off.png" alt=""/></li>
+				<li><img src="image/visual_bullet_off.png" alt=""/></li>
+				<li><img src="image/visual_bullet_off.png" alt=""/></li>
+			</ul>
+			<p class="touch_left_btn">
+				<a href="#">
+					<img src="image/visual_btn_left.png" alt="이전 배너"/>
+				</a>
+			</p>
+			<p class="touch_right_btn">
+				<a href="#">
+					<img src="image/visual_btn_right.png" alt="다음 배너"/>
+				</a>
+			</p>
+		</div>
+		<div id="bestbook_zone">
+			<div id="best_bg">
+				<ul>
+					<li><a href="#"><img src="image/bestbook_list_1.png" alt=""/><span>
+						<strong>안드로이드</strong>정재관 지음</span></a>
+					</li>
+					<li><a href="#"><img src="image/bestbook_list_2.png" alt=""/><span>
+						<strong>과학 콘서트</strong>정재승 지음</span></a>
+					</li>
+					<li><a href="#"><img src="image/bestbook_list_3.png" alt=""/><span>
+						<strong>건강 비결</strong>윤석현 지음</span></a>
+					</li>
+					<li><a href="#"><img src="image/bestbook_list_4.png" alt=""/><span>
+						<strong>마션</strong>앤디 위어</span></a>
+					</li>
+				</ul>
+				<p class="prev_btn">
+					<a href="#">
+						<img src="image/bestbook_btn_left.png" alt="이전으로 이동"/>
+					</a>
+				</p>
+				<p class="next_btn">
+					<a href="#">
+						<img src="image/bestbook_btn_right.png" alt="다음으로 이동"/>
+					</a>
+				</p>
+			</div>
+		</div>
+	</div>
+	<p id="best_books_p">베스트 책 정보</p>
+	<div id="best_books">
+		<a href="#"><img src="image/bestbook_img_1.png" class="best"/></a>
+		<a href="#"><img src="image/bestbook_img_2.png" class="best"/></a>
+		<a href="#"><img src="image/bestbook_img_3.png" class="best"/></a>
+		<a href="#"><img src="image/bestbook_img_4.png" class="best"/></a>
+		<a href="#"><img src="image/bestbook_img_5.png" class="best"/></a>
+	</div>
+	<div id="bottom_content">
+		<p id="google_news_p">구글 뉴스</p>
+		<div id="google_news">
+			<img src="image/google_news.png"/>
+			<ul id="list"></ul>
+		</div>
+		<p id="java_video_p">보너스 영상</p>
+		<div id="java_video">
+			<iframe width="560" height="315" src="https://www.youtube.com/embed/Sos11X7wy1M?list=PLVsNizTWUw7FPokuK8Cmlt72DQEt7hKZu" 
+			frameborder="0" allowfullscreen></iframe>
+		</div>
+	</div>
+	<div id="footer">
+		<p id="footer_p">NOTICE: 한빛출판사(주)에서 역량있는 재무담당자를 모집합니다(서류전형 ~ 4월 11일)</p>
+		<div id="footer_body">
+			<img src="image/footer_body.png"/>
+		</div>
+		<address id="footer_address">©1993-2017 Hanbit Publishing Network, Inc. All rights reserved.</address>
+	</div>
+</div>  
+</body>
+</html>

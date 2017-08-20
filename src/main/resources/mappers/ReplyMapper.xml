@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dgit.persistence.ReplyDao">
+
+	<select id="list" resultType="ReplyVO">
+		select * from tbl_reply
+		where bno = #{bno} and kindboard = #{kindboard}
+		order by rno desc
+	</select>
+	
+	<select id="replyNo" resultType="ReplyVO">
+		select * from tbl_reply
+		where rno = #{rno} and kindboard = #{kindboard}
+	</select>
+	
+	<insert id="create">
+		insert into tbl_reply (rno, bno, replytext, userid, nickname, score, kindboard, memberpic)
+		values(0, #{bno}, #{replytext}, #{userid}, #{nickname}, #{score}, #{kindboard}, #{memberpic})
+	</insert>
+	
+	<update id="update">
+		update tbl_reply set replytext = #{replytext}, updatedate = now(), score = #{score}
+		where rno = #{rno} and bno = #{bno} and kindboard = #{kindboard}
+	</update>
+	
+	<delete id="delete">
+		delete from tbl_reply where rno = #{rno} and bno = #{bno} and kindboard = #{kindboard}
+	</delete>
+	
+	<delete id="deleteAll">
+		delete from tbl_reply where bno = #{bno} and kindboard = #{kindboard}
+	</delete>
+	
+	<select id="listPage" resultType="ReplyVO">
+		select * from tbl_reply where bno = #{bno}
+		and kindboard = #{kindboard}
+		order by rno desc
+		limit #{cri.pageStart},#{cri.perPageNum}
+	</select>
+	
+	<select id="count" resultType="int">
+		select count(bno) from tbl_reply where bno=#{bno} and kindboard = #{kindboard}
+	</select>
+	
+	<select id="getBno" resultType="int">
+		select bno from tbl_reply where rno = #{rno} and kindboard = #{kindboard}
+	</select>
+	
+	<select id="scoreAvg" resultType="double">
+		select round(avg(score), 1) from tbl_reply where bno=#{bno} and kindboard = #{kindboard}
+	</select>
+	
+</mapper>

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dgit.persistence.BoardDao">
+
+	<insert id="create">
+		insert into tbl_board (bno, title, content, userid, nickname, kindboard, bookname)
+		values (0, #{title}, #{content}, #{userid}, #{nickname}, #{kindboard}, #{bookname})
+	</insert>
+	
+	<update id="update">
+		update tbl_board
+		<set>
+			<if test="title != null">title = #{title},</if>
+			<if test="content != null">content = #{content},</if>
+			<if test="scoreavg != null">scoreavg = #{scoreavg},</if>
+		</set>
+		where bno = #{bno} and kindboard = #{kindboard}
+	</update>
+	
+	<update id="updateCnt">
+		update tbl_board set viewcnt = #{viewcnt}
+		where bno = #{bno} and kindboard = #{kindboard}
+	</update>
+	
+	<delete id="delete">
+		delete from tbl_board where bno = #{bno} and kindboard = #{kindboard}
+	</delete>
+	
+	<select id="listAll" resultType="BoardVO">
+		select * from tbl_board where kindboard = #{kindboard}
+	</select>
+	
+	<select id="read" resultType="BoardVO">
+		select * from tbl_board where bno = #{bno} and kindboard = #{kindboard}
+	</select>
+	
+	<select id="listPage" resultType="BoardVO">
+		select * from tbl_board where (bno > 0) 
+		and kindboard = #{kindboard}
+		order by bno desc, regdate desc
+		limit #{page},10
+	</select>
+	
+	<select id="listCriteria" resultType="BoardVO">
+		select * from tbl_board 
+		where bno > 0 and kindboard = #{kindboard}
+		order by bno desc, regdate desc
+		limit #{cri.pageStart},#{cri.perPageNum}
+	</select>
+	
+	<sql id="search">
+		<if test="cri.searchType != null">
+			<if test="cri.searchType == 't'.toString()">
+				and title like CONCAT('%',#{cri.keyword},'%')
+			</if>
+			<if test="cri.searchType == 'c'.toString()">
+				and content like CONCAT('%',#{cri.keyword},'%')
+			</if>
+			<if test="cri.searchType == 'w'.toString()">
+				and nickname like CONCAT('%',#{cri.keyword},'%')
+			</if>
+			<if test="cri.searchType == 'tc'.toString()">
+				and title like CONCAT('%',#{cri.keyword},'%') OR content like CONCAT('%',#{cri.keyword},'%'),
+			</if>
+			<if test="cri.searchType == 'cw'.toString()">
+				and content like CONCAT('%',#{cri.keyword},'%') OR nickname like CONCAT('%',#{cri.keyword},'%'),
+			</if>
+			<if test="cri.searchType == 'tcw'.toString()">
+				and title like CONCAT('%',#{cri.keyword},'%') 
+					OR content like CONCAT('%',#{cri.keyword},'%')
+					OR nickname like CONCAT('%',#{cri.keyword},'%')
+			</if>
+		</if>
+	</sql>
+	
+	<select id="listSearch" resultType="BoardVO">
+		select * from tbl_board
+		where kindboard = #{kindboard}
+		<include refid="search"/>
+		order by bno desc, regdate desc
+		limit #{cri.pageStart},#{cri.perPageNum}
+	</select>
+	
+	<select id="totalCount" resultType="int">
+		select count(bno) from tbl_board where kindboard = #{kindboard}
+	</select>
+	
+	<select id="searchCount" resultType="int">
+		select count(bno) from tbl_board where kindboard = #{kindboard} <include refid="search"/>
+	</select>
+	
+	<update id="updateReplyCnt">
+		update tbl_board set replycnt = replycnt + #{amount} where bno = #{bno} and kindboard = #{kindboard}
+	</update>
+	
+	<insert id="addAttach">
+		insert into tbl_attach(fullName, bno, kindboard) values (#{fullName}, (SELECT inc FROM tbl_incre WHERE kindboard = #{kindboard})-1, #{kindboard})
+	</insert>
+	
+	<insert id="modifyAttach">
+		insert into tbl_attach(fullName, bno, kindboard) values (#{fullName}, #{bno}, #{kindboard})
+	</insert>
+	
+	<select id="attachByNo" resultType="String">
+		select fullName from tbl_attach where bno = #{bno} and kindboard = #{kindboard}
+	</select>
+	
+	<delete id="delAttach">
+		delete from tbl_attach where fullName = #{fullName} and bno = #{bno} and kindboard = #{kindboard}
+	</delete>
+	
+	<update id="updateWeekBest">
+		update tbl_weekbest set bno = (select inc from tbl_incre where kindboard = #{kindboard})-1
+		where kindboard = #{kindboard}
+	</update>
+	
+	<update id="updateIsBest">
+		update tbl_board set isbest = #{num} where bno = #{bno} and kindboard = #{kindboard}
+	</update>
+	
+	<select id="isBest" resultType="int">
+		select isbest from tbl_board where bno = #{bno} and kindboard = #{kindboard}
+	</select>
+
+	<select id="listWeekBest" resultType="BoardVO">
+		select * from tbl_weekbest
+	</select>
+
+</mapper>
+
+<!-- memo -->
+<!-- 
+	<sql id="bestsearch">
+		<if test="bestsub == 1">
+			and bestsub = 1		
+		</if>
+	</sql>
+ -->

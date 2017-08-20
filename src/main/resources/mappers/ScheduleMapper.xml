@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dgit.persistence.ScheduleDao">
+
+	<select id="listSchedule" resultType="ScheduleVO">
+		select * from tbl_schedule
+	</select>
+	
+	<select id="scheduleByNo" resultType="String">
+		select schedule from tbl_schedule where year = #{year} and month = #{month} and day = #{day}
+	</select>
+
+	<insert id="subSchedule">
+		insert into tbl_schedule value(#{year}, #{month}, #{day}, #{schedule})
+	</insert>
+	
+	<update id="modSchedule">
+		update tbl_schedule set schedule = #{schedule} where year = #{year} and month = #{month} and day = #{day}
+	</update>
+	
+	<delete id="delSchedule">
+		delete from tbl_schedule where year = #{year} and month = #{month} and day = #{day} 
+	</delete>
+
+</mapper>
