@@ -3,6 +3,8 @@ package com.dgit.websocket;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.servlet.http.HttpSession;
+
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
@@ -44,7 +46,7 @@ public class SocketHandler extends TextWebSocketHandler implements InitializingB
 	public void handleMessage(WebSocketSession session,
 			WebSocketMessage<?> message) throws Exception {
 		super.handleMessage(session, message);
-
+		
 		this.logger.info("receive message:"+message.toString());
 		this.msg = message.getPayload().toString();
 	}

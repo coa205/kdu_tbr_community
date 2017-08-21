@@ -136,6 +136,9 @@
 		select * from tbl_board where kindboard = 'lcbest' order by scoreavg asc;
 	</select>
 	
+	<update id="recomUp">
+		update tbl_board set recomcnt = recomcnt + 1 where bno = #{bno} and kindboard = #{kindboard}
+	</update>
 </mapper>
 
 <!-- memo -->

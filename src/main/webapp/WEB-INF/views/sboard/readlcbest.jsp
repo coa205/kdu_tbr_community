@@ -67,7 +67,7 @@
 		width: 100px;
 	}
 	.timeline{
-		height:415px;
+		height:615px;
 		overflow: auto;
 		margin-bottom:0;
 	}
@@ -178,7 +178,9 @@
   				
 				<div class="box-footer">
 					<button class="btn btn-primary" id="btnBack">back</button>
-					<button class="btn btn-success" id="delBest">delete best</button>
+					<c:if test="${isAdmin == true}">
+						<button class="btn btn-success" id="delBest">delete best</button>
+					</c:if>
 				</div>
 				<form role="form" method="post" id="f1">
 					<input type="hidden" name="bno" value="${board.bno }">

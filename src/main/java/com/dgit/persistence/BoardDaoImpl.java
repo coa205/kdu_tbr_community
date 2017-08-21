@@ -179,4 +179,12 @@ public class BoardDaoImpl implements BoardDao {
 		return session.selectList(namespace+".scoreAsc", kindboard);
 	}
 
+	@Override
+	public void recomUp(int bno, String kindboard) throws Exception {
+		Map<String, Object> map = new HashMap<>();
+		map.put("bno", bno);
+		map.put("kindboard", kindboard);
+		session.update(namespace+".recomUp", map);
+	}
+
 }

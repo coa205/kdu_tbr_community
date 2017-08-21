@@ -170,6 +170,13 @@ public class SBoardController {
 		return listPage(model, vo.getKindboard(), cri);
 	}
 	
+	@RequestMapping(value="recomUp", method=RequestMethod.GET)
+	public String recomUpGET(Model model, BoardVO vo, @ModelAttribute("cri") SearchCriteria cri) throws Exception{
+		service.recomUp(vo.getBno(), vo.getKindboard());
+	
+		return listPage(model, vo.getKindboard(), cri);
+	}
+	
 	@RequestMapping(value="modify", method=RequestMethod.GET)
 	public String modifyGET(Model model, BoardVO vo, @ModelAttribute("cri") SearchCriteria cri) throws Exception{
 		BoardVO board = service.read(vo.getBno(), vo.getKindboard());

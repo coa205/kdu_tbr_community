@@ -94,11 +94,16 @@ public class BoardDaoTest {
 		}
 	}
 	
-	@Test
+	//@Test
 	public void testListSearch() throws Exception{
 		SearchCriteria cri = new SearchCriteria();
 		cri.setKeyword("제발");
 		cri.setSearchType("t");
 		dao.listSearch(cri, "voca");
 	}
+	
+	@Test
+		public void testrecomUp() throws Exception{
+			dao.recomUp(215, "voca");
+		}
 }

@@ -78,6 +78,9 @@
 		width:500px;
 		height:135px;
 	}
+	#recombtn{
+		cursor: pointer;
+	}
 	@media only screen and (max-width: 1024px){
 		#wrap_content{
 			width:690px;
@@ -223,7 +226,7 @@
 				</div>
 				<div class="box-footer" style="clear:both;">
 				</c:if>
-					<c:if test="${loginid == board.userid}">
+					<c:if test="${loginid == board.userid && isAdmin != true}">
 						<button class="btn btn-warning">modify</button>
 						<button class="btn btn-danger">delete</button>
 					</c:if>
@@ -232,6 +235,7 @@
 						<button class="btn btn-danger">delete</button>
 					</c:if>
 					<button class="btn btn-primary" id="btnBack">back</button>
+					<img src = "/TBR_community/resources/dist/img/recom.png" style="width:50px;" id="recombtn">
 					<c:if test="${isAdmin == true}">
 						<c:if test="${board.isbest == 0}">
 							<button class="btn btn-primary" id="btnBest">best submit</button>
@@ -268,6 +272,11 @@
 					$("#f1").children().last().append(this);
 				});
 				$("#f1").attr("action","modify");
+				$("#f1").attr("method","get");
+				$("#f1").submit();
+			});
+			$("#recombtn").click(function(){
+				$("#f1").attr("action","recomUp");
 				$("#f1").attr("method","get");
 				$("#f1").submit();
 			});

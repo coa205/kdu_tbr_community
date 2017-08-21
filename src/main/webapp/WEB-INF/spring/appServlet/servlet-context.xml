@@ -61,6 +61,7 @@
 			<mapping path="/sboard/read"/>
 			<mapping path="/sboard/readlcbest"/>
 			<mapping path="/sboard/delete"/>
+			<mapping path="/chat/chat"/>
 			<beans:ref bean="authInterceptor"/>
 		</interceptor>
 	</interceptors>

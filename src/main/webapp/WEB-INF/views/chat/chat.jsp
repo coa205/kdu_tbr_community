@@ -9,16 +9,17 @@
 <body>
 	<script type="text/javascript">
             var wsUri = "ws://localhost:8080/TBR_community/echo.do";
-			setting_message();
-            
+			setting_message("${loginnick}님이 입장하셨습니다.<br>");
+			
             function init() {
                 output = document.getElementById("output");
+				users = document.getElementById("users");
             }
 
-            function setting_message() {
+            function setting_message(msg) {
                 websocket = new WebSocket(wsUri);
                 websocket.onopen = function(evt) {
-                    onOpen(evt)
+                    onOpen(msg)
                 };
 				websocket.onmessage = function(evt) {
 	            	onMessage(evt)
@@ -32,12 +33,18 @@
 				doSend("<b>${loginnick}</b>: " + textID.value + "<br>");
 			}
 
-            function onOpen(evt) {
-                doSend(evt);
+            function onOpen(msg) {
+				var pre = document.createElement("span");
+				pre.style.wordWrap = "break-word";
+				pre.innerHTML = "${loginnick}";
+				users.appendChild(pre);
+                doSend(msg);
             }
 
             function onMessage(evt) {
-				writeToScreen(evt.data);
+				if(evt.data!="[object Event]"){
+					writeToScreen(evt.data);
+				}
 				websocket.send("");
             }
 
@@ -55,7 +62,8 @@
 				pre.style.wordWrap = "break-word";
 				pre.innerHTML = message;
 				
-				output.appendChild(pre);	
+				output.appendChild(pre);
+				textID.value="";
             }
 
             window.addEventListener("load", init, false);
@@ -71,11 +79,12 @@
 						<div id="output" style="width: 500px; height: 500px;"></div>
 					</td>
 					<td style="width: 100px; height: 500px;">
+						<div id="users" style="width: 100px; height: 500px;"></div>
 					</td>
 				</tr>
 				<tr>
 					<td colspan="2" style="width: 100%;">
-						<form action="">
+						<form action="" onsubmit="return false;">
 	                		<input id="textID" name="message" type="text" style="width: 55%; float:left;">
 							<input onclick="send()" value="보내기" type="button" style="width: 90px; float:left; margin-left:10px;">
 	           	 		</form>
@@ -85,6 +94,9 @@
 		</table>
 </body>
 </html>
+
 <!-- memo
 	<body onLoad="javascript:open_win();">
+	<input onkeydown="javascript:if(event.keyCode==13) {send(); return false;}">
+	<form action="" onsubmit="send(); return false;">
  -->

@@ -25,4 +25,5 @@ public interface BoardService {
 	public List<BoardVO> listWeekBest() throws Exception;
 	public List<BoardVO> dateAsc(String kindboard) throws Exception;
 	public List<BoardVO> scoreAsc(String kindboard) throws Exception;
+	public void recomUp(int bno, String kindboard) throws Exception;
 }

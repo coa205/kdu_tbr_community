@@ -195,6 +195,9 @@
 	#best_bg ul li img{
 		width: 132px;
 	}
+	#best_bg ul li{
+		height:190px;
+	}
 	#best_bg .next_btn{
 		position: absolute;
 		top:170px;
@@ -220,7 +223,16 @@
 	}
 	#lc_conbtn{
 		margin:130px 0 0 70px;
-	}	
+	}
+	#best_bg span{
+		position: absolute;
+		font-weight: bold;
+		font-size:12px;
+		top:150px;
+		left: 10px;
+		color:black;
+		z-index:2;
+	}
 	@media only screen and (max-width: 1024px){
 		#wrap{
 			height:2700px;
@@ -658,10 +670,6 @@
 			}	
 		});
 		
-		setTimeout( function(){
-			$(".bx-viewport").attr("style", "width: 100%; overflow: hidden; position: relative; height: 453px;");
-		},800);
-		
 		$("#div_best_voca").hide();
 		$("#div_best_rc").hide();
 		$("#div_best_lc").hide();
@@ -779,4 +787,8 @@
 	},function(){ 
 	 alert("빠져나옴"); 
 	});
+	
+	setTimeout( function(){
+		$(".bx-viewport").attr("style", "width: 100%; overflow: hidden; position: relative; height: 453px;");
+	},800);
  -->

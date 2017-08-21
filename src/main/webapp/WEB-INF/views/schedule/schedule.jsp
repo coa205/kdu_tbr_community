@@ -9,7 +9,7 @@
 <title>Insert title here</title>
 <style>
 .c-day:HOVER {
-	background: red;
+	background: rgba(34,34,34,0.5);
 	cursor: pointer;
 }
 #sch_popup{

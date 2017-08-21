@@ -128,4 +128,9 @@ public class BoardServiceImpl implements BoardService {
 		return dao.scoreAsc(kindboard);
 	}
 
+	@Override
+	public void recomUp(int bno, String kindboard) throws Exception {
+		dao.recomUp(bno, kindboard);
+	}
+
 }

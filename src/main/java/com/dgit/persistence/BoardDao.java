@@ -52,4 +52,6 @@ public interface BoardDao {
 	
 	public List<BoardVO> scoreAsc(String kindboard) throws Exception;
 	
+	public void recomUp(int bno, String kindboard) throws Exception;
+	
 }

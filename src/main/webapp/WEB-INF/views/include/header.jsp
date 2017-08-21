@@ -123,9 +123,19 @@
 		})
 		
 		$("#schedule").click(function(){
-			var popupX = (window.screen.width / 2) - (610 / 2);
-			var popupY= (window.screen.height /2) - (350 / 2);
-			window.open('/TBR_community/sboard/schedule','popup', "width=610, height=350, left="+popupX+", top="+popupY+", toolbar=no, location=no, directories=no, status=no, menubar=no, resizable=no, scrollbars=no, copyhistory=no");
+			<%
+        		try{boolean isAdmin = (boolean) request.getSession().getAttribute("isAdmin");
+        	%>
+				var popupX = (window.screen.width / 2) - (610 / 2);
+				var popupY= (window.screen.height /2) - (350 / 2);
+				window.open('/TBR_community/sboard/schedule','popup', "width=610, height=350, left="+popupX+", top="+popupY+", toolbar=no, location=no, directories=no, status=no, menubar=no, resizable=no, scrollbars=no, copyhistory=no");
+			<%
+        		}catch(Exception e){
+			%>
+					alert("관리자만 사용가능합니다.");
+			<%
+				}
+			%>
 		})
 		
 		$("#logout").click(function(e){
@@ -289,8 +299,8 @@
 				<%
 					if(user!=null){
 				%>
-				<img src="/TBR_community/user/displayFile?filename=<%=userPic%>" class="img-circle" alt="User Image" id="user_icon">
-				<div class="topnav"><p data-toggle="modal" data-target="#myModal" id="p_user"><%=user%> 님</p></div>
+				<img src="/TBR_community/user/displayFile?filename=<%=userPic%>" class="img-circle" id="user_icon">
+				<div class="topnav" style="margin-left:15px;"><p data-toggle="modal" data-target="#myModal" id="p_user"><%=user%> 님</p></div>
 				<%
 					}else{
 				%>
@@ -424,29 +434,6 @@
 		    <!-- sidebar menu: : style can be found in sidebar.less -->
 		    <ul class="sidebar-menu">
 		      <li class="header">MAIN NAVIGATION</li>
-		      <li>
-		        <a href="#" id="chat">
-		          <i class="fa fa-comments-o"></i> <span>대화방</span>
-		          <small class="label pull-right bg-red">3</small>
-		        </a>
-		      </li>
-		      <li>
-		        <a href="#" id="schedule">
-		          <i class="fa fa-calendar"></i> <span>스케줄</span>
-		          <small class="label pull-right bg-yellow">12</small>
-		        </a>
-		      </li>
-		      <li class="treeview">
-		        <a href="#">
-		          <i class="fa fa-trophy"></i> <span>베스트 목록</span>
-		          <i class="fa fa-angle-left pull-right"></i>
-		        </a>
-		        <ul class="treeview-menu">
-		          <li><a href="${pageContext.request.contextPath}/sboard/listbest?kindboard=vocabest"><i class="fa fa-genderless"></i>VOCA 베스트</a></li>
-		          <li><a href="${pageContext.request.contextPath}/sboard/listbest?kindboard=rcbest"><i class="fa fa-genderless"></i>RC 베스트</a></li>
-		          <li><a href="${pageContext.request.contextPath}/sboard/listbest?kindboard=lcbest"><i class="fa fa-genderless"></i>LC 베스트</a></li>               
-		        </ul>
-		      </li>
 		      <li class="treeview">
 		        <a href="#">
 		          <i class="fa fa-edit"></i> <span>일반 게시판</span>
@@ -468,8 +455,25 @@
 		          <li><a href="${pageContext.request.contextPath}/sboard/listPage?kindboard=rc"><i class="fa fa-genderless"></i>독해 게시판</a></li>
 		        </ul>
 		      </li>
-		      <li class="header">LABELS</li>
-		      <li><a href="#"><i class="fa fa-circle-o text-red"></i> <span>Important</span></a></li>
+		      <li class="treeview">
+		        <a href="#">
+		          <i class="fa fa-trophy"></i> <span>베스트 목록</span>
+		          <i class="fa fa-angle-left pull-right"></i>
+		        </a>
+		        <ul class="treeview-menu">
+		          <li><a href="${pageContext.request.contextPath}/sboard/listbest?kindboard=vocabest"><i class="fa fa-genderless"></i>VOCA 베스트</a></li>
+		          <li><a href="${pageContext.request.contextPath}/sboard/listbest?kindboard=rcbest"><i class="fa fa-genderless"></i>RC 베스트</a></li>
+		          <li><a href="${pageContext.request.contextPath}/sboard/listbest?kindboard=lcbest"><i class="fa fa-genderless"></i>LC 베스트</a></li>               
+		        </ul>
+		      </li>
+		      <li>
+		        <a href="#" id="chat">
+		          <i class="fa fa-comments-o"></i> <span>대화방</span>
+		          <small class="label pull-right bg-red">3</small>
+		        </a>
+		      </li>
+		      <li class="header">관리자 외 접근금지</li>
+		      <li><a href="#" id="schedule"><i class="fa fa-calendar text-red"></i> <span>스케줄</span></a></li>
 		      <li><a href="#"><i class="fa fa-circle-o text-yellow"></i> <span>Warning</span></a></li>
 		      <li><a href="#"><i class="fa fa-circle-o text-aqua"></i> <span>Information</span></a></li>
 		    </ul>
